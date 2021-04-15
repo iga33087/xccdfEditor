@@ -8,7 +8,7 @@ export default {
       'rear-matter':'element',
       'reference':'element',
       'plain-text':'element',
-      'cpe2:platform-specification':'element',
+      //'cpe2:platform-specification':'element',
       'platform':'element',
       'version':'element',
       'metadata':'element',
@@ -220,12 +220,10 @@ export default {
       'update':'attribute'
     },
     'title': {
-      'xmlns:xhtml':'attribute',
       'xml:lang':'attribute',
       'override':'attribute',
     },
     'description': {
-      'xmlns:xhtml':'attribute',
       'xml:lang':'attribute',
       'override':'attribute',
     },
@@ -236,12 +234,21 @@ export default {
       'href':'attribute'
     },
     'rationale': {
-      'xmlns:xhtml':'attribute',
       'xml:lang':'attribute',
     },
     'warning': {
-      'xmlns:xhtml':'attribute',
       'xml:lang':'attribute',
       'category':'attribute'
+    },
+    /*'metadata': {
+      'dc:publisher':'element',
+      'dc:creator':'element',
+      'dc:contributor':'element',
+      'dc:source':'element',
+      'dc:subject':'element',
+      //'xmlns:dc':'attribute'
+    },*/
+    'value': {
+      'selector':'attribute'
     }
 }
