@@ -1,0 +1,47 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Microsoft JhengHei';
+}
+
+i {
+  cursor: pointer;
+}
+h1,h2,h3,h4,h5 {
+  margin: 0 0 10px 0;
+}
+.buttonList {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+}
+.xccdfTreeItem {
+  background-color: rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+  .xccdfTreeItemTagName {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .xccdfTreeItemTagNameMenu {
+      display: flex;
+      align-items: center;
+    }
+    .xccdfTreeItemTagNameIconOpen {
+      transform: rotate(180deg);
+    }
+    .xccdfTreeItemAttributes {
+    }
+    .xccdfTreeItemAttributesItemH3 {
+      display: flex;
+      align-items: center;
+    }
+    .xccdfTreeItemAttributesItemH3Name {
+      margin-right: 10px;
+    }
+    .xccdfTreeItemChildNodes {
+      padding-left: 20px;
+    }
+}

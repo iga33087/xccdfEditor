@@ -1,6 +1,8 @@
 <template>
   <div class="xccdfTree">
-    <XccdfTreeItem v-for="(item,index) in value" :value="item" v-model="value[index]" :key="index"/>
+    <div v-for="(item,index) in value" :key="index">
+      <XccdfTreeItem v-model="value[index]"/>
+    </div>
   </div>
 </template>
 
