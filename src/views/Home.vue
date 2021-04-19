@@ -7,8 +7,10 @@
       </div>
       <div class="toolBarMenu">
         <input ref="upFile" type="file" style="display:none;" @change="importData">
-        <el-button @click="$refs.upFile.click()">匯入</el-button>
-        <el-button type="primary" @click="exportData">匯出</el-button>
+        <el-input v-model="key" placeholder="搜尋id" style="width:200px;margin-right:10px;"></el-input>
+        <el-button type="primary" @click="searchId">搜尋</el-button>
+        <el-button type="warning" @click="$refs.upFile.click()">匯入</el-button>
+        <el-button type="success" @click="exportData">匯出</el-button>
       </div>
     </div>
     <XccdfTreeItem v-model="fileData"/>
@@ -27,6 +29,7 @@ export default {
   },
   data() {
     return {
+      key:"",
       fileName: "example",
       fileData: "",
       fileDataHTML: "",
@@ -38,11 +41,16 @@ export default {
     let parser=new DOMParser()
     this.fileData=parser.parseFromString('',"text/xml");
     let html=this.createEle('Benchmark').outerHTML
-    this.fileData=(parser.parseFromString(html,"text/xml")).documentElement
+    this.fileData=parser.parseFromString(html,"text/xml")
     this.fileDataHTML=this.fileData.childNodes[0].outerHTML
     console.log('home', this.fileData)
   },
   methods: {
+    searchId() {
+      if(!this.key) return 0
+      let dom=this.fileData.getElementById(this.key)
+      console.log(dom)
+    },
     importData(e) {
       console.log(e)
       let file=e.target.files[0]||e.dataTransfer.files[0]  //e.target.files[0] || e.dataTransfer.files[0]
@@ -50,7 +58,7 @@ export default {
         const reader = new FileReader();
         reader.onload = (event) => {
           let parser=new DOMParser()
-          this.fileData=(parser.parseFromString(event.target.result,"text/xml")).documentElement
+          this.fileData=parser.parseFromString(event.target.result,"text/xml")
           resolve(event.target.result)
         };
         reader.readAsBinaryString(file)
