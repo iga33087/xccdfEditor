@@ -1,7 +1,65 @@
+$color1:#30cfd0;
+$color2:#330867;
+
+$xs: 575.98px;
+$sm: 767px;
+$md: 992px;
+$lg: 1200px;
+$xl: 1920px;
+
+@mixin rwd($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
 html,body {
   margin: 0;
   padding: 0;
   font-family: 'Microsoft JhengHei';
+}
+
+.header {
+  height: 50px;
+  background-color: $color2;
+  margin-bottom: 20px;
+  .headerBox {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    color:#fff;
+    font-size: 30px;
+    box-sizing: border-box;
+    @include rwd($lg) {
+      width: 100%;
+      padding: 0 10px;
+    }
+  }
+}
+
+.content {
+  width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  @include rwd($lg) {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+.toolBar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  .toolBarItem {
+    display: flex;
+    align-items: center;
+  }
+  .toolBarItemLabel {
+    margin-right: 10px;
+  }
 }
 
 i {
@@ -16,7 +74,9 @@ h1,h2,h3,h4,h5 {
   padding: 10px 0;
 }
 .xccdfTreeItem {
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.01);
+  box-shadow: 0 0 2px #222 inset;
+  border-radius: 4px;
   margin-bottom: 20px;
   padding: 20px;
   .xccdfTreeItemTagName {
@@ -43,5 +103,8 @@ h1,h2,h3,h4,h5 {
     }
     .xccdfTreeItemChildNodes {
       padding-left: 20px;
+      @include rwd($lg) {
+        margin-right: 2px;
+      }
     }
 }

@@ -16,7 +16,6 @@ export default {
   props: ['value'],
   methods: {
     updata(e) {
-      console.log("e",e)
       let obj=this.value
       obj.id=e
       this.$emit('input',obj)

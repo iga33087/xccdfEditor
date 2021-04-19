@@ -1,11 +1,10 @@
 <template>
   <div class="xccdfEditor" @dragover.prevent @drop.prevent="importData">
-    <button v-for="(item,index) in Object.keys(EleList)" :key="index" @click="createEle(item)">Add {{item}}</button>
-    <button @click="exportData">匯出</button>
+    <!--<button v-for="(item,index) in Object.keys(EleList)" :key="index" @click="createEle(item)">Add {{item}}</button>-->
+    <!--<button @click="exportData">匯出</button>-->
     <div class="xccdfEditorBox">
-      <div class="xccdfEditorBoxItem">檔案名稱<input type="text" v-model="fileName"/></div>
+      <!--<div class="xccdfEditorBoxItem">檔案名稱<input type="text" v-model="fileName"/></div>-->
       <div v-if="fileData">
-        <XccdfTree2 v-model="fileDataHTML" />
         <XccdfTree v-model="fileData.children" />
       </div>
     </div>
@@ -15,11 +14,11 @@
 <script>
 //import parseString from 'xml2js'
 import XccdfTree from '@/components/XccdfTree.vue'
-import XccdfTree2 from '@/components/XccdfTree2.vue'
 import EleList from '@/assets/data/EleList.js'
 
 export default {
-  components: {XccdfTree,XccdfTree2},
+  components: {XccdfTree},
+  props:["value"],
   data() {
     return {
       fileName: "",
@@ -33,7 +32,6 @@ export default {
     this.fileData=parser.parseFromString('',"text/xml");
     let html=this.createEle('Benchmark').outerHTML
     this.fileData=parser.parseFromString(html,"text/xml");
-    console.log(this.fileData.childNodes)
     this.fileDataHTML=this.fileData.childNodes[0].outerHTML
     console.log(this.fileDataHTML)
   },
@@ -45,7 +43,6 @@ export default {
         reader.onload = (event) => {
           let parser=new DOMParser()
           this.fileData=parser.parseFromString(event.target.result,"text/xml")
-          console.log('fileData',this.fileData.childNodes)
           resolve(event.target.result)
         };
         reader.readAsBinaryString(file)
@@ -90,7 +87,6 @@ export default {
           }
         }
       }
-      console.log(newEle)
       return newEle
     },
     getChoose(x) {

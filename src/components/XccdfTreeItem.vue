@@ -25,7 +25,7 @@
       <div class="xccdfTreeItemAttributesItem" v-for="(item,index) in value.attributes" :key="index">
         <h3 class="xccdfTreeItemAttributesItemH3">
           <div class="xccdfTreeItemAttributesItemH3Name">{{item.name}}</div>
-          <input type="text" :value="item.value" @input="updataAttributes($event,index)"/>
+          <input type="text" :value="item.value" @input="updataAttributes($event,item.value)"/>
           <i class="el-icon-close" @click="delAttributes(item.name)" />
         </h3>
       </div>
@@ -77,15 +77,11 @@ export default {
     }
   },
   created() {
-    console.log('canCreateEle',this.canCreateEle)
-    console.log('canCreateAtt',this.canCreateAtt)
   },
   methods: {
     updataAttributes(e,index) {
         let obj=this.value
         obj.attributes[index].value=e.target.value
-        console.log(e,index)
-        console.log(obj)
         try {
           this.$emit('input',obj)
         } catch (error) {
@@ -125,7 +121,6 @@ export default {
           }
         }
       }
-      console.log(newEle)
       return newEle
     },
     async delElement() {
