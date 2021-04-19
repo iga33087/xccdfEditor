@@ -4,8 +4,8 @@
     <!--<button @click="exportData">匯出</button>-->
     <div class="xccdfEditorBox">
       <!--<div class="xccdfEditorBoxItem">檔案名稱<input type="text" v-model="fileName"/></div>-->
-      <div v-if="fileData">
-        <XccdfTree v-model="fileData.children" />
+      <div v-if="value">
+        <XccdfTree v-model="value.children" />
       </div>
     </div>
   </div>
@@ -13,11 +13,12 @@
 
 <script>
 //import parseString from 'xml2js'
-import XccdfTree from '@/components/XccdfTree.vue'
+//import XccdfTree from '@/components/XccdfTree.vue'
+import XccdfTreeItem from '@/components/XccdfTreeItem.vue'
 import EleList from '@/assets/data/EleList.js'
 
 export default {
-  components: {XccdfTree},
+  components: {XccdfTreeItem},
   props:["value"],
   data() {
     return {
@@ -27,17 +28,19 @@ export default {
       EleList:EleList
     }
   },
-  created() {
-    let parser=new DOMParser()
-    this.fileData=parser.parseFromString('',"text/xml");
-    let html=this.createEle('Benchmark').outerHTML
-    this.fileData=parser.parseFromString(html,"text/xml");
-    this.fileDataHTML=this.fileData.childNodes[0].outerHTML
-    console.log(this.fileDataHTML)
+  watch: {
+    value: {
+      handler() {
+        this.$emit('input',this.value)
+      },
+      deep:true,
+      immediate:true
+    }
   },
   methods: {
     importData(e) {
-      let file=e.dataTransfer.files[0]
+      console.log(e)
+      /*let file=e.dataTransfer.files[0]
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -46,7 +49,7 @@ export default {
           resolve(event.target.result)
         };
         reader.readAsBinaryString(file)
-      })
+      })*/
     },
     exportData() {
       var pom = document.createElement('a');
@@ -59,36 +62,19 @@ export default {
       pom.click();
     },
     getTagList(x) {
-      return this.fileData.getElementsByTagName(x)
+      return this.value.getElementsByTagName(x)
     },
     del(x) {
       x.parentNode.removeChild(x)
       this.$forceUpdate()
     },
     add(x) {
-      let dom=this.fileData.getElementsByTagName(x)[0]
+      let dom=this.value.getElementsByTagName(x)[0]
       let copyDom=dom.cloneNode(true);
       dom.parentNode.appendChild(copyDom);
       this.$forceUpdate()
     },
-    createEle(x) {
-      let newEle=this.fileData.createElement(x);
-      let newText=this.fileData.createTextNode(" ");
-      newEle.appendChild(newText);
-      if(EleList[x]) {
-        for(let item of Object.keys(EleList[x])) {
-          if(x==item) continue; 
-          if(EleList[x][item]=='element') {
-            //let newEleC = this.fileData.createElement(item)
-            newEle.appendChild(this.createEle(item));
-          }
-          else if(EleList[x][item]=='attribute') {
-            newEle.setAttribute(item, "");
-          }
-        }
-      }
-      return newEle
-    },
+
     getChoose(x) {
       this.chooseData=x
       this.showMore=!this.showMore

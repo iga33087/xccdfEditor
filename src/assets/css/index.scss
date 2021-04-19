@@ -102,9 +102,6 @@ h1,h2,h3,h4,h5 {
       margin-right: 10px;
     }
     .xccdfTreeItemChildNodes {
-      padding-left: 20px;
-      @include rwd($lg) {
-        margin-right: 2px;
-      }
+
     }
 }

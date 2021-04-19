@@ -11,43 +11,54 @@
         <el-button type="primary" @click="exportData">匯出</el-button>
       </div>
     </div>
-    <XccdfEditor v-model="fileData"/>
+    <XccdfTreeItem v-model="fileData"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import XccdfEditor from '@/components/XccdfEditor.vue'
+import XccdfTreeItem from '@/components/XccdfTreeItem.vue'
 import EleList from '@/assets/data/EleList.js'
 
 export default {
   name: 'Home',
   components: {
-    XccdfEditor,
+    XccdfTreeItem,
   },
   data() {
     return {
       fileName: "example",
       fileData: "",
       fileDataHTML: "",
-      EleList:EleList
+      EleList:EleList,
+      obj:""
     }
   },
   created() {
     let parser=new DOMParser()
     this.fileData=parser.parseFromString('',"text/xml");
     let html=this.createEle('Benchmark').outerHTML
-    this.fileData=parser.parseFromString(html,"text/xml");
+    this.fileData=(parser.parseFromString(html,"text/xml")).documentElement
     this.fileDataHTML=this.fileData.childNodes[0].outerHTML
-    console.log(this.fileDataHTML)
+    console.log('home', this.fileData)
   },
   methods: {
     importData(e) {
       console.log(e)
+      let file=e.target.files[0]||e.dataTransfer.files[0]  //e.target.files[0] || e.dataTransfer.files[0]
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          let parser=new DOMParser()
+          this.fileData=(parser.parseFromString(event.target.result,"text/xml")).documentElement
+          resolve(event.target.result)
+        };
+        reader.readAsBinaryString(file)
+      })
     },
     exportData() {
       var pom = document.createElement('a');
-      var bb = new Blob([this.fileData.documentElement.outerHTML]);
+      var bb = new Blob([this.fileData.outerHTML]);
       pom.setAttribute('href', window.URL.createObjectURL(bb));
       pom.setAttribute('download', this.fileName+'.xml');
       pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
@@ -56,9 +67,11 @@ export default {
       pom.click();
     },
     createEle(x) {
+      let obj={}
       let newEle=this.fileData.createElement(x);
       let newText=this.fileData.createTextNode(" ");
       newEle.appendChild(newText);
+      obj.html=newEle
       if(EleList[x]) {
         for(let item of Object.keys(EleList[x])) {
           if(x==item) continue; 

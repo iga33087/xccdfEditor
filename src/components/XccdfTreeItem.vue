@@ -25,7 +25,7 @@
       <div class="xccdfTreeItemAttributesItem" v-for="(item,index) in value.attributes" :key="index">
         <h3 class="xccdfTreeItemAttributesItemH3">
           <div class="xccdfTreeItemAttributesItemH3Name">{{item.name}}</div>
-          <input type="text" :value="item.value" @input="updataAttributes($event,item.value)"/>
+          <input type="text" :value="item.value" @input="updataAttributes($event,index)"/>
           <i class="el-icon-close" @click="delAttributes(item.name)" />
         </h3>
       </div>
