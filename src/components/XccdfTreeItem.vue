@@ -10,19 +10,19 @@
       </div>
     </el-dialog>
     <h1 class="xccdfTreeItemTagName" @click.stop="isOpen=!isOpen">
-      <div>{{value.nodeName}}</div>
-      <div>{{value.nodeValue}}</div>
+      <div>{{value.html.nodeName}}</div>
+      <div>{{value.html.nodeValue}}</div>
       <div class="xccdfTreeItemTagNameMenu">
         <!--<el-button @click.stop="addAttributes">add attributes</el-button>-->
         <el-button @click.stop="showDialog=!showDialog">add element</el-button>
         <i class="el-icon-close" @click.stop="delElement" />
-        <i class="xccdfTreeItemTagNameIcon el-icon-arrow-down" :class="{'xccdfTreeItemTagNameIconOpen':isOpen}" v-if="value.children&&value.children.length" />
+        <i class="xccdfTreeItemTagNameIcon el-icon-arrow-down" :class="{'xccdfTreeItemTagNameIconOpen':isOpen}" v-if="value.html.children&&value.html.children.length" />
       </div>
     </h1>
     
-    <div class="xccdfTreeItemAttributes" v-if="value.attributes&&value.attributes.length">
+    <div class="xccdfTreeItemAttributes" v-if="value.html.attributes&&value.html.attributes.length">
       <h2>Attributes</h2> 
-      <div class="xccdfTreeItemAttributesItem" v-for="(item,index) in value.attributes" :key="index">
+      <div class="xccdfTreeItemAttributesItem" v-for="(item,index) in value.html.attributes" :key="index">
         <h3 class="xccdfTreeItemAttributesItemH3">
           <div class="xccdfTreeItemAttributesItemH3Name">{{item.name}}</div>
           <input type="text" :value="item.value" @input="updataAttributes($event,index)"/>
@@ -40,7 +40,7 @@
     <div>
       <el-button @click.stop="showHTML=!showHTML">show innerHTML</el-button>
       <div>
-        <textarea v-model="value.innerHTML" v-if="showHTML" />
+        <textarea v-model="value.html.innerHTML" v-if="showHTML" />
       </div>
     </div>
   </div>
@@ -64,9 +64,9 @@ export default {
   },
   computed: {
     canCreateEle() {
-      if(!EleList[this.value.nodeName]) return []
-      let keys=Object.keys(EleList[this.value.nodeName])
-      let res=keys.filter(item=>EleList[this.value.nodeName][item]=='element')
+      if(!EleList[this.value.html.nodeName]) return []
+      let keys=Object.keys(EleList[this.value.html.nodeName])
+      let res=keys.filter(item=>EleList[this.value.html.nodeName][item]=='element')
       return res
     },
     canCreateAtt() {
@@ -81,7 +81,7 @@ export default {
   methods: {
     updataAttributes(e,index) {
         let obj=this.value
-        obj.attributes[index].value=e.target.value
+        obj.html.attributes[index].value=e.target.value
         try {
           this.$emit('input',obj)
         } catch (error) {
@@ -100,28 +100,33 @@ export default {
 
       let obj=this.value
       let newEle=this.createEle(this.chooseEleName)
-      obj.appendChild(newEle)
+      obj.children.push(newEle)
+      this.$emit('input',obj)
       this.showDialog=!this.showDialog
     },
     createEle(x) {
+      let obj={}
       let parser=new DOMParser()
       let dom=parser.parseFromString('',"text/xml");
       let newEle=dom.createElement(x);
       let newText=dom.createTextNode(" ");
       newEle.appendChild(newText);
       if(EleList[x]) {
+        obj.children=[]
         for(let item of Object.keys(EleList[x])) {
           if(x==item) continue; 
           if(EleList[x][item]=='element') {
-            //let newEleC = this.fileData.createElement(item)
-            newEle.appendChild(this.createEle(item));
+            let newEleC = this.createEle(item)
+            newEle.appendChild(newEleC.html);
+            obj.children.push(newEleC)
           }
           else if(EleList[x][item]=='attribute') {
             newEle.setAttribute(item, "");
           }
         }
       }
-      return newEle
+      obj.html=newEle
+      return obj
     },
     async delElement() {
       let obj=this.value.parentElement

@@ -13,7 +13,7 @@
         <el-button type="success" @click="exportData">匯出</el-button>
       </div>
     </div>
-    <XccdfTreeItem v-model="fileData"/>
+    <XccdfTreeItem v-model="objEle"/>
   </div>
 </template>
 
@@ -32,17 +32,15 @@ export default {
       key:"",
       fileName: "example",
       fileData: "",
-      fileDataHTML: "",
       EleList:EleList,
-      obj:""
+      objEle:""
     }
   },
   created() {
     let parser=new DOMParser()
-    this.fileData=parser.parseFromString('',"text/xml");
-    let html=this.createEle('Benchmark').outerHTML
-    this.fileData=parser.parseFromString(html,"text/xml")
-    this.fileDataHTML=this.fileData.childNodes[0].outerHTML
+    this.fileData=parser.parseFromString('',"text/xml")
+    this.objEle=this.createEle('Benchmark')
+    //this.fileData=parser.parseFromString(html,"text/xml")
     console.log('home', this.fileData)
   },
   methods: {
@@ -66,7 +64,7 @@ export default {
     },
     exportData() {
       var pom = document.createElement('a');
-      var bb = new Blob([this.fileData.outerHTML]);
+      var bb = new Blob([this.objEle.html.outerHTML]);
       pom.setAttribute('href', window.URL.createObjectURL(bb));
       pom.setAttribute('download', this.fileName+'.xml');
       pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
@@ -79,20 +77,22 @@ export default {
       let newEle=this.fileData.createElement(x);
       let newText=this.fileData.createTextNode(" ");
       newEle.appendChild(newText);
-      obj.html=newEle
       if(EleList[x]) {
+        obj.children=[]
         for(let item of Object.keys(EleList[x])) {
           if(x==item) continue; 
           if(EleList[x][item]=='element') {
-            //let newEleC = this.fileData.createElement(item)
-            newEle.appendChild(this.createEle(item));
+            let newEleC = this.createEle(item)
+            newEle.appendChild(newEleC.html);
+            obj.children.push(newEleC)
           }
           else if(EleList[x][item]=='attribute') {
             newEle.setAttribute(item, "");
           }
         }
       }
-      return newEle
+      obj.html=newEle
+      return obj
     },
   }
 }
