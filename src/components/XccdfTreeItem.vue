@@ -1,11 +1,11 @@
 <template>
   <div class="xccdfTreeItem">
     <div class="xccdfTreeItemBox">
-      <div class="xccdfTreeItemBoxTitle">{{tagName}}</div>
-      <div class="xccdfTreeItemBoxChildren">
-        <div v-if="false">
-          <XccdfTreeItem v-model="value[tagName]" :key="index" />
-        </div>
+      <div class="xccdfTreeItemBoxTitle">{{value.name}}</div>
+      <div class="xccdfTreeItemBoxChildren" v-if="valueCp.elements&&valueCp.elements.length">
+        <template v-for="(item,index) in value.elements">
+          <XccdfTreeItem v-model="valueCp.elements[index]" :key="index" v-if="item"/>
+        </template>
       </div>
     </div>
   </div>
@@ -18,6 +18,11 @@ export default {
   name:"XccdfTreeItem",
   props: ['value'],
   components: {XccdfTreeItem},
+  data() {
+    return {
+      valueCp:this.value
+    }
+  },
   computed: {
     tagName() {
       let res=Object.keys(this.value)
@@ -28,7 +33,7 @@ export default {
     },
   },
   created() {
-    console.log('item',this.value)
+    console.log('item',this.value.elements)
   }
 }
 </script>

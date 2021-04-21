@@ -42,11 +42,12 @@ export default {
   },
   created() {
     let dom=this.createEle('Benchmark')
-    this.sourceCode=dom.outerHTML
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
-    console.log('1',xJson)
+    console.log('1',this.addIdAndPid(xJson))
     console.log('2',jsonX)
+    this.sourceCode=jsonX
+    //console.log('3',this.addIdAndPid(xJson['elements'][0]))
   },
   methods: {
     getTagEle(x) {
@@ -95,14 +96,14 @@ export default {
       return convert.xml2js(x)
     },
     addIdAndPid(x,id) {
-      let keyArr=Object.keys(x)
-      keyArr=keyArr.filter(res=>res!=='_attributes')
       this.idCount++
       let nowId=this.idCount
       x['_id']=nowId
       if(id) x['_pid']=id
-      for(let item of keyArr) {
-        this.addIdAndPid(x[item],nowId)
+      if(x.elements&&x.elements.length) {
+        for(let item of x.elements) {
+          this.addIdAndPid(item,nowId)
+        }
       }
       return x
     }

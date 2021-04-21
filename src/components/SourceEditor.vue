@@ -3,7 +3,7 @@
     <div class="sourceEditorBox">
       <textarea class="sourceEditorBoxTextarea" :value="value" @input="$emit('input',$event.target.value)" @click="show"></textarea>
       <div class="sourceEditorBoxTree">
-        <XccdfTreeItem v-model="tree['Benchmark']" v-if="tree" />
+        <XccdfTreeItem v-model="tree" v-if="tree" />
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ export default {
   components: {XccdfTreeItem},
   asyncComputed: {
     tree() {
-      return JSON.parse(convert.xml2json(this.value, {compact: true}))
+      return convert.xml2js(this.value)
     }
   },
   created() {
