@@ -26,6 +26,9 @@ export default {
       console.log("tagName",res)
       return Object.keys(this.value)[0]
     },
+  },
+  created() {
+    console.log('item',this.value)
   }
 }
 </script>

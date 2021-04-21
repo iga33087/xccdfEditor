@@ -40,12 +40,13 @@ export default {
       objList:"",
     }
   },
-  async created() {
+  created() {
     let dom=this.createEle('Benchmark')
     this.sourceCode=dom.outerHTML
-    let xJson=await this.xmlToJson(dom.outerHTML)
-    console.log(xJson)
-    console.log(this.addIdAndPid(xJson))
+    let xJson=this.xmlToJson(dom.outerHTML)
+    let jsonX=convert.js2xml(xJson)
+    console.log('1',xJson)
+    console.log('2',jsonX)
   },
   methods: {
     getTagEle(x) {
@@ -91,7 +92,7 @@ export default {
       return dom
     },
     xmlToJson(x) {
-      return JSON.parse(convert.xml2json(x, {compact: true}))
+      return convert.xml2js(x)
     },
     addIdAndPid(x,id) {
       let keyArr=Object.keys(x)
