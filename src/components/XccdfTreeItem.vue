@@ -2,6 +2,9 @@
   <div class="xccdfTreeItem">
     <div class="xccdfTreeItemBox">
       <div class="xccdfTreeItemBoxTitle">{{value.name}}</div>
+      <div v-if="value.attributes">
+        <div v-for="(item,index) in Object.keys(value.attributes)" :key="index">{{item}} {{value.attributes[item]}}</div>
+      </div>
       <div class="xccdfTreeItemBoxChildren" v-if="valueCp.elements&&valueCp.elements.length">
         <template v-for="(item,index) in value.elements">
           <XccdfTreeItem v-model="valueCp.elements[index]" :key="index" v-if="item"/>
