@@ -105,3 +105,24 @@ h1,h2,h3,h4,h5 {
 
     }
 }
+
+.sourceEditor {
+  height: 75vh;
+  .sourceEditorBox {
+    height: 100%;
+    display: flex;
+  }
+  .sourceEditorBoxTextarea {
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+  .sourceEditorBoxTree {
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    overflow-y: scroll;
+  }
+}

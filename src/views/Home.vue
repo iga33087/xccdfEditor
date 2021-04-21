@@ -6,94 +6,107 @@
         <el-input v-model="fileName" placeholder="檔案名稱" style="width:200px;"></el-input>
       </div>
       <div class="toolBarMenu">
-        <input ref="upFile" type="file" style="display:none;" @change="importData">
+        <input ref="upFile" type="file" style="display:none;" @change="importFile">
         <el-input v-model="key" placeholder="搜尋id" style="width:200px;margin-right:10px;"></el-input>
-        <el-button type="primary" @click="searchId">搜尋</el-button>
+        <el-button type="primary">搜尋</el-button>
         <el-button type="warning" @click="$refs.upFile.click()">匯入</el-button>
-        <el-button type="success" @click="exportData">匯出</el-button>
+        <el-button type="success">匯出</el-button>
       </div>
     </div>
-    <XccdfTreeItem v-model="objEle"/>
+    <el-tabs v-model="activeName" type="card">
+      <el-tab-pane label="原始碼編輯" name="1">
+        <SourceEditor v-model="sourceCode"/>
+      </el-tab-pane>
+      <el-tab-pane label="圖像化編輯" name="2">圖像化編輯</el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import XccdfTreeItem from '@/components/XccdfTreeItem.vue'
+import convert  from 'xml-js'
 import EleList from '@/assets/data/EleList.js'
+import SourceEditor from '@/components/SourceEditor.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    XccdfTreeItem,
-  },
+  components: {SourceEditor},
   data() {
     return {
+      idCount:0,
+      activeName:"1",
+      fileName:"example",
       key:"",
-      fileName: "example",
-      fileData: "",
       EleList:EleList,
-      objEle:""
+      sourceCode:"",
+      objList:"",
     }
   },
-  created() {
-    let parser=new DOMParser()
-    this.fileData=parser.parseFromString('',"text/xml")
-    this.objEle=this.createEle('Benchmark')
-    //this.fileData=parser.parseFromString(html,"text/xml")
-    console.log('home', this.fileData)
+  async created() {
+    let dom=this.createEle('Benchmark')
+    this.sourceCode=dom.outerHTML
+    let xJson=await this.xmlToJson(dom.outerHTML)
+    console.log(xJson)
+    console.log(this.addIdAndPid(xJson))
   },
   methods: {
-    searchId() {
-      if(!this.key) return 0
-      let dom=this.fileData.getElementById(this.key)
-      console.log(dom)
+    getTagEle(x) {
+      if(!EleList[x]) return []
+      let arr=Object.keys(EleList[x])
+      let res=arr.filter(key=> EleList[x][key]==='element')
+      return res
     },
-    importData(e) {
-      console.log(e)
-      let file=e.target.files[0]||e.dataTransfer.files[0]  //e.target.files[0] || e.dataTransfer.files[0]
+    getTagAtt(x) {
+      if(!EleList[x]) return []
+      let arr=Object.keys(EleList[x])
+      let res=arr.filter(key=> EleList[x][key]==='attribute')
+      return res
+    },
+    async importFile(e) {
+      let file=e.target.files[0]
+      let res=await this.readFile(file)
+      this.sourceCode=res
+    },
+    readFile(file) {
       return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          let parser=new DOMParser()
-          this.fileData=parser.parseFromString(event.target.result,"text/xml")
-          resolve(event.target.result)
+        let reader = new FileReader();
+        reader.onload = function(evt) {
+          resolve(evt.target.result);
         };
-        reader.readAsBinaryString(file)
-      })
-    },
-    exportData() {
-      var pom = document.createElement('a');
-      var bb = new Blob([this.objEle.html.outerHTML]);
-      pom.setAttribute('href', window.URL.createObjectURL(bb));
-      pom.setAttribute('download', this.fileName+'.xml');
-      pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
-      pom.draggable = true; 
-      pom.classList.add('dragout');
-      pom.click();
+        reader.readAsText(file);
+      });
     },
     createEle(x) {
-      let obj={}
-      let newEle=this.fileData.createElement(x);
-      let newText=this.fileData.createTextNode(" ");
-      newEle.appendChild(newText);
-      if(EleList[x]) {
-        obj.children=[]
-        for(let item of Object.keys(EleList[x])) {
-          if(x==item) continue; 
-          if(EleList[x][item]=='element') {
-            let newEleC = this.createEle(item)
-            newEle.appendChild(newEleC.html);
-            obj.children.push(newEleC)
-          }
-          else if(EleList[x][item]=='attribute') {
-            newEle.setAttribute(item, "");
-          }
-        }
+      let parser = new DOMParser();
+      let xmlDoc = parser.parseFromString("","text/xml");
+      let getTagEle=this.getTagEle(x)
+      let getTagAtt=this.getTagAtt(x)
+      let dom = xmlDoc.createElement(x);
+      for(let item of getTagAtt) {
+        dom.setAttribute(item, "");
       }
-      obj.html=newEle
-      return obj
+      for(let item of getTagEle) {
+        if(item===x) continue;
+        let newDom=this.createEle(item)
+        dom.appendChild(newDom);
+      }
+      return dom
     },
+    xmlToJson(x) {
+      return JSON.parse(convert.xml2json(x, {compact: true}))
+    },
+    addIdAndPid(x,id) {
+      let keyArr=Object.keys(x)
+      keyArr=keyArr.filter(res=>res!=='_attributes')
+      this.idCount++
+      let nowId=this.idCount
+      x['_id']=nowId
+      if(id) x['_pid']=id
+      for(let item of keyArr) {
+        this.addIdAndPid(x[item],nowId)
+      }
+      return x
+    }
   }
 }
 </script>
+
+
