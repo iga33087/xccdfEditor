@@ -17,7 +17,9 @@
       <el-tab-pane label="原始碼編輯" name="1">
         <SourceEditor v-model="sourceCode"/>
       </el-tab-pane>
-      <el-tab-pane label="圖像化編輯" name="2">圖像化編輯</el-tab-pane>
+      <el-tab-pane label="圖像化編輯" name="2">
+        <UIEditor v-model="sourceCode"/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -26,9 +28,10 @@
 import convert  from 'xml-js'
 import EleList from '@/assets/data/EleList.js'
 import SourceEditor from '@/components/SourceEditor.vue'
+import UIEditor from '@/components/UIEditor.vue'
 
 export default {
-  components: {SourceEditor},
+  components: {SourceEditor,UIEditor},
   data() {
     return {
       idCount:0,
