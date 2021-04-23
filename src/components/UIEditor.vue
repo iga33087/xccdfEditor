@@ -14,34 +14,37 @@ export default {
   watch: {
     tree: {
       handler() {
-        alert(1)
+        //alert(1)
         this.$emit('input',convert.js2xml(this.tree))
+        this.$forceUpdate()
       },
       deep:true
     }
   },
   data() {
     return {
-      tree:convert.xml2js(this.value)
+      tree:convert.xml2js(this.value),
+      time:new Date().getTime()
     }
   },
   created() {
     this.$root.$on('delEle',(e)=> {
-      console.log(e)
+      this.delEle(e)
     })
   },
   methods: {
-    show() {
-      console.log(this.tree)
+    show(x) {
+      this.$emit('input',x)
     },
     delEle(e) {
       let parser = new DOMParser();
       let xmlDoc = parser.parseFromString(convert.js2xml(this.tree),"text/xml");
-      console.log(xmlDoc.getElementById(e.attributes.id))
+      console.log(11,xmlDoc.getElementById(e.attributes.id))
       xmlDoc.getElementById(e.attributes.id).remove()
-      console.log('delEle',xmlDoc.documentElement.outerHTML)
-      this.$emit('input',xmlDoc.documentElement.outerHTML)
-      this.$forceUpdate()
+      let html=xmlDoc.documentElement.outerHTML
+      console.log('delEle',html)
+      this.tree=convert.xml2js(html)
+
     }
   }
 }

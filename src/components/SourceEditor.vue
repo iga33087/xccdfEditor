@@ -16,7 +16,7 @@ import XccdfTreeItem  from '@/components/XccdfTreeItem.vue'
 export default {
   props:["value"],
   components: {XccdfTreeItem},
-  asyncComputed: {
+  computed: {
     tree() {
       return convert.xml2js(this.value)
     }

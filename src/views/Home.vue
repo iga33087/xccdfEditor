@@ -15,10 +15,10 @@
     </div>
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="原始碼編輯" name="1">
-        <SourceEditor v-model="sourceCode"/>
+        <SourceEditor v-model="sourceCode" v-if="activeName==='1'"/>
       </el-tab-pane>
       <el-tab-pane label="圖像化編輯" name="2">
-        <UIEditor v-model="sourceCode"/>
+        <UIEditor v-model="sourceCode" v-if="activeName==='2'"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       idCount:0,
-      activeName:"1",
+      activeName:"2",
       fileName:"example",
       key:"",
       EleList:EleList,
