@@ -14,6 +14,7 @@
         <div>{{value.name}}</div>
         <div>
           <el-button @click.stop="showDialog=!showDialog">add Element</el-button>
+          <i class="el-icon-arrow-down" :class="{'isOpen':isOpen}" />
           <i class="el-icon-close" @click.stop="delEle" v-if="editMode" />
         </div>
       </div>
@@ -28,9 +29,11 @@
           <div class="xccdfTreeItemBoxAttItemItem" v-else>{{value.attributes[item]}}</div>
         </div>
       </div>
+      <el-button @click="createText" v-if="!getTextEle.length">create HTML</el-button>
       <div class="xccdfTreeItemBoxChildren" v-if="value.elements&&value.elements.length&&isOpen">
         <template v-for="(item,index) in value.elements">
-          <XccdfTreeItem v-model="value.elements[index]" :editMode="editMode" :key="index" v-if="item"/>
+          <XccdfTreeItem v-model="value.elements[index]" :editMode="editMode" :key="index" v-if="item.type==='element'"/>
+          <textarea v-model="value.elements[index].text" :key="index" v-else-if="item.type==='text'"></textarea>
         </template>
       </div>
     </div>
@@ -57,12 +60,9 @@ export default {
     attributesList() {
       return Object.keys(this.value.attributes)
     },
-    tagName() {
-      let res=Object.keys(this.value)
-      res=res.filter(res=>res!=='_attributes')
-
-      console.log("tagName",res)
-      return Object.keys(this.value)[0]
+    getTextEle() {
+      if(!this.value.elements) return []
+      return this.value.elements.filter(res=>res.type==="text")
     },
     getEleList() {
       if(!EleList[this.value.name]) return []
@@ -132,6 +132,17 @@ export default {
       let arr=Object.keys(EleList[x])
       let res=arr.filter(key=> EleList[x][key]==='attribute')
       return res
+    },
+    createText() {
+      let textObj= {
+        type:'text',
+        text:'',
+      }
+      let obj=JSON.parse(JSON.stringify(this.value))
+      if(!obj.elements) obj.elements=[]
+      obj.elements.push(textObj)
+      this.$emit('input',obj)
+      this.isOpen=!this.isOpen
     },
     createEle(x) {
       let parser = new DOMParser();

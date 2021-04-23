@@ -10,7 +10,7 @@
         <el-input v-model="key" placeholder="搜尋id" style="width:200px;margin-right:10px;"></el-input>
         <el-button type="primary">搜尋</el-button>
         <el-button type="warning" @click="$refs.upFile.click()">匯入</el-button>
-        <el-button type="success">匯出</el-button>
+        <el-button type="success" @click="exportData">匯出</el-button>
       </div>
     </div>
     <el-tabs v-model="activeName" type="card">
@@ -47,7 +47,6 @@ export default {
     let dom=this.createEle('Benchmark')
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
-    console.log('1',this.addIdAndPid(xJson))
     console.log('2',jsonX)
     this.sourceCode=jsonX
     //console.log('3',this.addIdAndPid(xJson['elements'][0]))
@@ -69,6 +68,7 @@ export default {
       let file=e.target.files[0]
       let res=await this.readFile(file)
       this.sourceCode=res
+      this.activeName='1'
     },
     readFile(file) {
       return new Promise((resolve) => {
@@ -93,6 +93,8 @@ export default {
         let newDom=this.createEle(item)
         dom.appendChild(newDom);
       }
+      let newText=xmlDoc.createTextNode("");
+      dom.appendChild(newText);
       return dom
     },
     xmlToJson(x) {
@@ -109,7 +111,17 @@ export default {
         }
       }
       return x
-    }
+    },
+    exportData() {
+      var pom = document.createElement('a');
+      var bb = new Blob([this.sourceCode]);
+      pom.setAttribute('href', window.URL.createObjectURL(bb));
+      pom.setAttribute('download', this.fileName+'.xml');
+      pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+      pom.draggable = true; 
+      pom.classList.add('dragout');
+      pom.click();
+    },
   }
 }
 </script>
