@@ -49,21 +49,8 @@ export default {
     let jsonX=convert.js2xml(xJson)
     console.log('2',jsonX)
     this.sourceCode=jsonX
-    //console.log('3',this.addIdAndPid(xJson['elements'][0]))
   },
   methods: {
-    getTagEle(x) {
-      if(!EleList[x]) return []
-      let arr=Object.keys(EleList[x])
-      let res=arr.filter(key=> EleList[x][key]==='element')
-      return res
-    },
-    getTagAtt(x) {
-      if(!EleList[x]) return []
-      let arr=Object.keys(EleList[x])
-      let res=arr.filter(key=> EleList[x][key]==='attribute')
-      return res
-    },
     async importFile(e) {
       let file=e.target.files[0]
       let res=await this.readFile(file)
@@ -82,8 +69,8 @@ export default {
     createEle(x) {
       let parser = new DOMParser();
       let xmlDoc = parser.parseFromString("","text/xml");
-      let getTagEle=this.getTagEle(x)
-      let getTagAtt=this.getTagAtt(x)
+      let getTagEle=this.$global.getTagEle(x)
+      let getTagAtt=this.$global.getTagAtt(x)
       let dom = xmlDoc.createElement(x);
       for(let item of getTagAtt) {
         dom.setAttribute(item, "");
@@ -99,18 +86,6 @@ export default {
     },
     xmlToJson(x) {
       return convert.xml2js(x)
-    },
-    addIdAndPid(x,id) {
-      this.idCount++
-      let nowId=this.idCount
-      x['_id']=nowId
-      if(id) x['_pid']=id
-      if(x.elements&&x.elements.length) {
-        for(let item of x.elements) {
-          this.addIdAndPid(item,nowId)
-        }
-      }
-      return x
     },
     exportData() {
       var pom = document.createElement('a');

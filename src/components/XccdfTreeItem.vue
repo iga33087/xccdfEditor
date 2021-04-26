@@ -2,7 +2,7 @@
   <div class="xccdfTreeItem">
     <el-dialog title="add Element" :visible.sync="showDialog" width="50%">
       <el-select v-model="newTagName" placeholder="請選擇物件">
-        <el-option v-for="(item,index) in getEleList" :key="index" :label="item" :value="item">
+        <el-option v-for="(item,index) in $global.getTagEle(value.name)" :key="index" :label="item" :value="item">
         </el-option>
       </el-select>
       <div class="buttonList">
@@ -57,18 +57,9 @@ export default {
     }
   },
   computed: {
-    attributesList() {
-      return Object.keys(this.value.attributes)
-    },
     getTextEle() {
       if(!this.value.elements) return []
       return this.value.elements.filter(res=>res.type==="text")
-    },
-    getEleList() {
-      if(!EleList[this.value.name]) return []
-      let keys=Object.keys(EleList[this.value.name])
-      let res=keys.filter(item=>EleList[this.value.name][item]=='element')
-      return res
     },
     getAttList() {
       return EleList[this.value.name].filter(res=>res==='attribute')
@@ -147,8 +138,8 @@ export default {
     createEle(x) {
       let parser = new DOMParser();
       let xmlDoc = parser.parseFromString("","text/xml");
-      let getTagEle=this.getTagEle(x)
-      let getTagAtt=this.getTagAtt(x)
+      let getTagEle=this.$global.getTagEle(x)
+      let getTagAtt=this.$global.getTagAtt(x)
       let dom = xmlDoc.createElement(x);
       for(let item of getTagAtt) {
         dom.setAttribute(item, "");
