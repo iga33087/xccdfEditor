@@ -124,3 +124,23 @@ h1,h2,h3,h4,h5 {
     overflow-y: scroll;
   }
 }
+
+.xccdfTreeItem2 {
+  border-width: 0 0 0 1px;
+  border-color: #222;
+  border-style: solid;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0,0,0,0.05);
+  }
+  .xccdfTreeItem2Box {
+    padding-left: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .xccdfTreeItem2BoxChildren {
+    padding-left: 50px;
+  }
+}

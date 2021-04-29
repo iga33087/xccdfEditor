@@ -1,16 +1,18 @@
 <template>
   <div class="uiEditor">
     <XccdfTreeItem v-model="tree['elements'][0]" :editMode="true" v-if="tree" />
+    <XccdfTreeItem2 v-model="tree['elements'][0]" :editMode="true" v-if="tree"/>
   </div>
 </template>
 
 <script>
 import convert  from 'xml-js'
 import XccdfTreeItem  from '@/components/XccdfTreeItem.vue'
+import XccdfTreeItem2  from '@/components/XccdfTreeItem2.vue'
 
 export default {
   props:["value"],
-  components: {XccdfTreeItem},
+  components: {XccdfTreeItem,XccdfTreeItem2},
   watch: {
     tree: {
       handler() {
