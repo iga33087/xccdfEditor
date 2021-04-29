@@ -26,7 +26,6 @@
 
 <script>
 import convert  from 'xml-js'
-import EleList from '@/assets/data/EleList.js'
 import SourceEditor from '@/components/SourceEditor.vue'
 import UIEditor from '@/components/UIEditor.vue'
 
@@ -38,13 +37,12 @@ export default {
       activeName:"2",
       fileName:"example",
       key:"",
-      EleList:EleList,
       sourceCode:"",
       objList:"",
     }
   },
   created() {
-    let dom=this.createEle('Benchmark')
+    let dom=this.$global.createEle('Benchmark')
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
     console.log('2',jsonX)
@@ -65,24 +63,6 @@ export default {
         };
         reader.readAsText(file);
       });
-    },
-    createEle(x) {
-      let parser = new DOMParser();
-      let xmlDoc = parser.parseFromString("","text/xml");
-      let getTagEle=this.$global.getTagEle(x)
-      let getTagAtt=this.$global.getTagAtt(x)
-      let dom = xmlDoc.createElement(x);
-      for(let item of getTagAtt) {
-        dom.setAttribute(item, "");
-      }
-      for(let item of getTagEle) {
-        if(item===x) continue;
-        let newDom=this.createEle(item)
-        dom.appendChild(newDom);
-      }
-      let newText=xmlDoc.createTextNode("");
-      dom.appendChild(newText);
-      return dom
     },
     xmlToJson(x) {
       return convert.xml2js(x)

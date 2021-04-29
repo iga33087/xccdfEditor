@@ -42,7 +42,6 @@
 
 <script>
 import convert  from 'xml-js'
-import EleList from '@/assets/data/EleList.js'
 import XccdfTreeItem from '@/components/XccdfTreeItem.vue'
 
 export default {
@@ -61,9 +60,6 @@ export default {
       if(!this.value.elements) return []
       return this.value.elements.filter(res=>res.type==="text")
     },
-    getAttList() {
-      return EleList[this.value.name].filter(res=>res==='attribute')
-    }
   },
   created() {
     console.log('item',this.value.elements)
@@ -94,7 +90,7 @@ export default {
       this.$forceUpdate()
     },
     addEle() {
-      let dom=this.createEle(this.newTagName).outerHTML
+      let dom=this.$global.createEle(this.newTagName).outerHTML
       let html=(convert.xml2js(dom))['elements'][0]
       let obj=this.value
       obj.elements.push(html)
@@ -112,18 +108,6 @@ export default {
         this.$root.$emit('delEle',this.value)
       }
     },
-    getTagEle(x) {
-      if(!EleList[x]) return []
-      let arr=Object.keys(EleList[x])
-      let res=arr.filter(key=> EleList[x][key]==='element')
-      return res
-    },
-    getTagAtt(x) {
-      if(!EleList[x]) return []
-      let arr=Object.keys(EleList[x])
-      let res=arr.filter(key=> EleList[x][key]==='attribute')
-      return res
-    },
     createText() {
       let textObj= {
         type:'text',
@@ -134,22 +118,6 @@ export default {
       obj.elements.push(textObj)
       this.$emit('input',obj)
       this.isOpen=!this.isOpen
-    },
-    createEle(x) {
-      let parser = new DOMParser();
-      let xmlDoc = parser.parseFromString("","text/xml");
-      let getTagEle=this.$global.getTagEle(x)
-      let getTagAtt=this.$global.getTagAtt(x)
-      let dom = xmlDoc.createElement(x);
-      for(let item of getTagAtt) {
-        dom.setAttribute(item, "");
-      }
-      for(let item of getTagEle) {
-        if(item===x) continue;
-        let newDom=this.createEle(item)
-        dom.appendChild(newDom);
-      }
-      return dom
     },
   }
 }
