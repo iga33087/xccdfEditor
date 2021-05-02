@@ -1,7 +1,7 @@
 <template>
   <div class="uiEditor">
-    <XccdfTreeItem v-model="tree['elements'][0]" :editMode="true" v-if="tree" />
-    <XccdfTreeItem2 v-model="tree['elements'][0]" :editMode="true" v-if="tree"/>
+    <XccdfTreeItem v-model="tree['elements'][0]" :editMode="true" v-if="false" />
+    <XccdfTreeItem2 v-model="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" v-if="tree"/>
   </div>
 </template>
 
@@ -47,6 +47,11 @@ export default {
       console.log('delEle',html)
       this.tree=convert.xml2js(html)
 
+    },
+    upData(e) {
+      console.log('fffffff',e)
+      this.tree['elements'][0]=e.value
+      this.$emit('input',convert.js2xml(this.tree))
     }
   }
 }
