@@ -38,14 +38,13 @@ export default {
       fileName:"example",
       key:"",
       sourceCode:"",
-      objList:"",
     }
   },
   created() {
     let dom=this.$global.createEle('Benchmark')
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
-    console.log('2',jsonX)
+    //console.log('2',jsonX)
     this.sourceCode=jsonX
   },
   methods: {

@@ -3,7 +3,7 @@
     <div class="sourceEditorBox">
       <textarea class="sourceEditorBoxTextarea" :value="value" @input="$emit('input',$event.target.value)" @click="show"></textarea>
       <div class="sourceEditorBoxTree">
-        <XccdfTreeItem v-model="tree['elements'][0]" :editMode="false" v-if="tree" />
+        <XccdfTreeItem2 v-model="tree['elements'][0]" :editMode="false" v-if="tree" />
       </div>
     </div>
   </div>
@@ -11,11 +11,11 @@
 
 <script>
 import convert  from 'xml-js'
-import XccdfTreeItem  from '@/components/XccdfTreeItem.vue'
+import XccdfTreeItem2  from '@/components/XccdfTreeItem2.vue'
 
 export default {
   props:["value"],
-  components: {XccdfTreeItem},
+  components: {XccdfTreeItem2},
   computed: {
     tree() {
       return convert.xml2js(this.value)
