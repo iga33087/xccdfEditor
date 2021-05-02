@@ -2,7 +2,7 @@
   <div class="xccdfTreeItem2">
     <el-dialog :title="value.name" :visible.sync="showDialog" width="50%">
       <div>
-        <h2>Attributes<el-button type="success" @click="addAtt">Add Attributes</el-button></h2>
+        <h2>11Attributes<el-button type="success" @click="addAtt">Add Attributes</el-button></h2>
         <el-form label-width="100px" v-if="value.attributes">
           <el-form-item :label="item" v-for="(item,index) in Object.keys(value.attributes)" :key="index">
             <el-input v-model="value.attributes[item]" />
