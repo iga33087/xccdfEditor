@@ -101,14 +101,18 @@ export default {
       let newEle=this.$global.createEle(this.chooseAdd).outerHTML
       newEle=(convert.xml2js(newEle))['elements'][0]
       obj.elements.push(newEle)
-      this.upData(obj)
+      this.toUpData(obj)
     },
-    upData(x=this.data) {
+    upData(e) {
       let obj= {
-        value:x,
-        index:this.index
+        value:this.value,
+        index:e.index
       }
       this.$emit('upData',obj)
+    },
+    toUpData() {
+
+      //this.$emit('upData',obj)
     },
     inputVerification(x) {
       if(!this.ruleObj||!this.ruleObj[x]) return {flag:true}
