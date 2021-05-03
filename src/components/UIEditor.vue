@@ -1,6 +1,6 @@
 <template>
   <div class="uiEditor">
-    <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" v-if="tree"/>
+    <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" :defaultIsOpen="true" :parentTag="''" v-if="tree"/>
   </div>
 </template>
 

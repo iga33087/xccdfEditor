@@ -46,6 +46,7 @@ export default {
     let jsonX=convert.js2xml(xJson)
     //console.log('2',jsonX)
     this.sourceCode=jsonX
+    console.log(this.$global.flatEleList())
   },
   methods: {
     async importFile(e) {

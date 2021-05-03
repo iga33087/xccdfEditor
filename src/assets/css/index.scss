@@ -143,4 +143,12 @@ h1,h2,h3,h4,h5 {
   .xccdfTreeItem2BoxChildren {
     padding-left: 50px;
   }
+  .xccdfTreeItem2BoxMenuError {
+    margin-right: 10px;
+  }
+  .xccdfTreeItem2DiaBoxH2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

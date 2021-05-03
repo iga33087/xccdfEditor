@@ -3,7 +3,7 @@
     <div class="sourceEditorBox">
       <textarea class="sourceEditorBoxTextarea" :value="value" @input="$emit('input',$event.target.value)" @click="show"></textarea>
       <div class="sourceEditorBoxTree">
-        <XccdfTreeItem2 v-model="tree['elements'][0]" :editMode="false" v-if="tree" />
+        <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" :index="0" :defaultIsOpen="true" v-if="tree"/>
       </div>
     </div>
   </div>
