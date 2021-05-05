@@ -1,20 +1,25 @@
 <template>
   <div class="uiEditor">
-    <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" :defaultIsOpen="true" :parentTag="''" v-if="tree"/>
+    <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" :defaultIsOpen="true" :parentTag="''" v-if="false"/>
+    <Tree :data="tree['elements'][0]" :index="0" />
+    <InputTest :data="inputTestData"/>
   </div>
 </template>
 
 <script>
 import convert  from 'xml-js'
 import XccdfTreeItem2  from '@/components/XccdfTreeItem2.vue'
+import Tree  from '@/components/Tree.vue'
+import InputTest  from '@/components/InputTest.vue'
 
 export default {
   props:["value"],
-  components: {XccdfTreeItem2},
+  components: {XccdfTreeItem2,Tree,InputTest},
   watch: {
     tree: {
       handler() {
         //alert(1)
+        alert(1)
         this.$emit('input',convert.js2xml(this.tree))
         this.$forceUpdate()
       },
@@ -24,12 +29,29 @@ export default {
   data() {
     return {
       tree:convert.xml2js(this.value),
-      time:new Date().getTime()
+      time:new Date().getTime(),
+      inputTestData:{title:'123',value:[
+        {title:'111'},
+        {title:'222'},
+      ]},
+      treeTest:[
+        {title:'1111',data:{d1:1,d2:1,d3:2},elements:[
+          {title:'1-1',data:{d1:1,d2:1,d3:2}},
+          {title:'1-2',data:{d1:1,d2:1,d3:2},elements:[
+            {title:'1-2-1',data:{d1:1,d2:1,d3:2}},
+            {title:'1-2-2',data:{d1:1,d2:1,d3:2}},
+          ]},
+          {title:'1-3',data:{d1:1,d2:1,d3:2}},
+        ]},
+      ]
     }
   },
   created() {
     this.$root.$on('delEle',(e)=> {
       this.delEle(e)
+    })
+    this.$root.$on('refresh',()=> {
+      this.$emit('input',convert.js2xml(this.tree))
     })
   },
   methods: {
