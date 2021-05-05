@@ -36,13 +36,15 @@
       </div>
       <div class="xccdfTreeItem2BoxMenu">
         <el-tag class="xccdfTreeItem2BoxMenuError" type="danger" v-if="getErrorCount">ERROR x {{getErrorCount}}</el-tag>
-        <el-button type="success" @click.stop="isAdd=true;showDialog=!showDialog">新增</el-button>
+        <el-button type="success" @click.stop="isAdd=true;showDialog=!showDialog" v-if="Object.keys(getEleList).length">新增</el-button>
         <el-button type="warning" @click.stop="isAdd=false;showDialog=!showDialog">修改</el-button>
         <el-button type="danger" @click.stop="showDialog=!showDialog">刪除</el-button>
       </div>
     </div>
     <div class="xccdfTreeItem2BoxChildren" v-if="data.elements&&data.elements.length&&isOpen">
-      <XccdfTreeItem2 v-for="(item,index) in data.elements" :key="index" :data="data.elements[index]" :index="index" :defaultIsOpen="false" :parentTag="data.name" @upData="upData" />
+      <template v-for="(item,index) in data.elements">
+        <XccdfTreeItem2 :key="index" :data="data.elements[index]" :index="index" :defaultIsOpen="false" :parentTag="data.name" @upData="upData" v-if="data.elements[index]" />
+      </template>
     </div>
   </div>
 </template>
@@ -100,19 +102,18 @@ export default {
       let obj=this.data
       let newEle=this.$global.createEle(this.chooseAdd).outerHTML
       newEle=(convert.xml2js(newEle))['elements'][0]
+      if(!obj.elements.length) obj.elements=[]
       obj.elements.push(newEle)
       this.toUpData(obj)
     },
     upData(e) {
-      let obj= {
-        value:this.value,
-        index:e.index
-      }
-      this.$emit('upData',obj)
+      let obj=this.value
+      obj.elements[e.index]=e.value
+      this.toUpData(obj)
     },
-    toUpData() {
+    toUpData(x) {
+      this.$emit('upData',{value:x,index:this.index})
 
-      //this.$emit('upData',obj)
     },
     inputVerification(x) {
       if(!this.ruleObj||!this.ruleObj[x]) return {flag:true}
