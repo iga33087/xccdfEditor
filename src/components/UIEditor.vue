@@ -1,8 +1,7 @@
 <template>
   <div class="uiEditor">
     <XccdfTreeItem2 :data="tree['elements'][0]" :editMode="true" @upData="upData" :index="0" :defaultIsOpen="true" :parentTag="''" v-if="false"/>
-    <Tree :data="tree['elements'][0]" :index="0" />
-    <InputTest :data="inputTestData"/>
+    <Tree :data="tree['elements'][0]" :index="0" :parentTag="''" v-if="viewTree" />
   </div>
 </template>
 
@@ -10,16 +9,14 @@
 import convert  from 'xml-js'
 import XccdfTreeItem2  from '@/components/XccdfTreeItem2.vue'
 import Tree  from '@/components/Tree.vue'
-import InputTest  from '@/components/InputTest.vue'
 
 export default {
   props:["value"],
-  components: {XccdfTreeItem2,Tree,InputTest},
+  components: {XccdfTreeItem2,Tree},
   watch: {
     tree: {
       handler() {
         //alert(1)
-        alert(1)
         this.$emit('input',convert.js2xml(this.tree))
         this.$forceUpdate()
       },
@@ -44,6 +41,11 @@ export default {
           {title:'1-3',data:{d1:1,d2:1,d3:2}},
         ]},
       ]
+    }
+  },
+  computed: {
+    viewTree() {
+      return convert.xml2js(this.value)
     }
   },
   created() {
