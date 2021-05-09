@@ -19,8 +19,8 @@
                 <span style="color:#f00;" v-if="!inputVerification(item).flag">{{inputVerification(item).text}}</span>
               </el-form-item>
             </template>
-            <el-form-item :label="'內容'">
-              <el-input type="textarea" :rows="4"/>
+            <el-form-item :label="'內容'" v-if="data.elements&&data.elements.length">
+              <el-input type="textarea" v-model="data.elements[getTextIndex()].text" :rows="4"/>
             </el-form-item>
           </el-form>
         </div>
@@ -40,7 +40,9 @@
       </div>
     </div>
     <div class="treeChildrens" v-show="data.elements&&data.elements.length&&showChildrens">
-      <Tree v-for="(item,index) in data.elements" :data="item" :index="index" :key="index" :parentTag="data.name" @delEle="toDelEle" />
+      <template v-for="(item,index) in data.elements">
+        <Tree :data="item" :index="index" :key="index" :parentTag="data.name" @delEle="toDelEle"  v-if="item.type!=='text'"/>
+      </template>
     </div>
   </div>
 </template>
@@ -92,9 +94,20 @@ export default {
     }
   },
   mounted() {
-    console.log(this.data.name,this.getAllError())
+    if(!this.data.elements) this.data.elements=[]
+    let text=this.data.elements.filter(res=>res.type==='text')
+    console.log('text.length',text.length)
+    if(!text.length) {
+      this.data.elements.push({text:'',type:'text'})
+    }
+    //console.log()
   },
   methods: {
+    getTextIndex() {
+      let map=this.data.elements.map(res=>res.type)
+      let index=map.indexOf('text')
+      return index
+    },
     getAllError() {
       let res=0
       let dom=this.$refs.tree
@@ -102,7 +115,7 @@ export default {
       for(let item of list) {
         res+=Number(item.innerHTML)
       }
-      console.log(res)
+      //console.log(res)
       return res
     },
     addEle() {

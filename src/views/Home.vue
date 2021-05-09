@@ -26,6 +26,7 @@
 
 <script>
 import convert  from 'xml-js'
+import parser from 'fast-xml-parser'
 import SourceEditor from '@/components/SourceEditor.vue'
 import UIEditor from '@/components/UIEditor.vue'
 
@@ -44,9 +45,25 @@ export default {
     let dom=this.$global.createEle('Benchmark')
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
-    //console.log('2',jsonX)
     this.sourceCode=jsonX
-    console.log(this.$global.flatEleList())
+    var options = {
+        attributeNamePrefix : "@_",
+        attrNodeName: "attr", //default is 'false'
+        textNodeName : "#text",
+        ignoreAttributes : true,
+        ignoreNameSpace : false,
+        allowBooleanAttributes : false,
+        parseNodeValue : true,
+        parseAttributeValue : false,
+        trimValues: true,
+        cdataTagName: "__cdata", //default is 'false'
+        cdataPositionChar: "\\c",
+        parseTrueNumberOnly: false,
+        arrayMode: true, //"strict"
+        stopNodes: ["parse-me-as-string"]
+    };
+    let jsonObj = parser.parse(dom.outerHTML,options);
+    console.log("json",jsonObj)
   },
   methods: {
     async importFile(e) {

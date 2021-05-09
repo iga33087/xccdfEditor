@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     importData(e) {
-      console.log(e)
+      //console.log(e)
       /*let file=e.dataTransfer.files[0]
       return new Promise((resolve) => {
         const reader = new FileReader();

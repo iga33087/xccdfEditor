@@ -63,15 +63,15 @@ export default {
     delEle(e) {
       let parser = new DOMParser();
       let xmlDoc = parser.parseFromString(convert.js2xml(this.tree),"text/xml");
-      console.log(11,xmlDoc.getElementById(e.attributes.id))
+      //console.log(11,xmlDoc.getElementById(e.attributes.id))
       xmlDoc.getElementById(e.attributes.id).remove()
       let html=xmlDoc.documentElement.outerHTML
-      console.log('delEle',html)
+      //console.log('delEle',html)
       this.tree=convert.xml2js(html)
 
     },
     upData(e) {
-      console.log('fffffff',e)
+      //console.log('fffffff',e)
       this.tree['elements'][0]=e.value
       this.$emit('input',convert.js2xml(this.tree))
     }

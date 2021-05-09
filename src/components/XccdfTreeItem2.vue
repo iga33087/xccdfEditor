@@ -64,6 +64,14 @@ export default {
     }
   },
   components: {XccdfTreeItem2},
+  /*created() {
+    if(!this.data.elements) this.data.elements=[]
+    let text=this.data.elements.filter(res=>res.type==='text')
+    console.log('text.length',text.length)
+    if(!text.length) {
+      this.data.elements.push({text:'',type:'text'})
+    }
+  },*/
   computed: {
     getflatEleListByTagName() {
       return this.$global.getflatEleListByTagName(this.data.name,this.parentTag)
