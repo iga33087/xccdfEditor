@@ -13,6 +13,7 @@
         <el-button type="success" @click="exportData">匯出</el-button>
       </div>
     </div>
+    <el-button @click="show">OK</el-button>
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="原始碼編輯" name="1">
         <SourceEditor v-model="sourceCode" v-if="activeName==='1'"/>
@@ -24,11 +25,12 @@
   </div>
 </template>
 
+<script src="https://cdn.jsdelivr.net/npm/xmllint@0.1.1/xmllint.js"></script>
 <script>
 import convert  from 'xml-js'
-import parser from 'fast-xml-parser'
 import SourceEditor from '@/components/SourceEditor.vue'
 import UIEditor from '@/components/UIEditor.vue'
+import axios from 'axios'
 
 export default {
   components: {SourceEditor,UIEditor},
@@ -39,31 +41,15 @@ export default {
       fileName:"example",
       key:"",
       sourceCode:"",
+      xsd:""
     }
   },
-  created() {
+  async created() {
     let dom=this.$global.createEle('Benchmark')
     let xJson=this.xmlToJson(dom.outerHTML)
     let jsonX=convert.js2xml(xJson)
     this.sourceCode=jsonX
-    var options = {
-        attributeNamePrefix : "@_",
-        attrNodeName: "attr", //default is 'false'
-        textNodeName : "#text",
-        ignoreAttributes : true,
-        ignoreNameSpace : false,
-        allowBooleanAttributes : false,
-        parseNodeValue : true,
-        parseAttributeValue : false,
-        trimValues: true,
-        cdataTagName: "__cdata", //default is 'false'
-        cdataPositionChar: "\\c",
-        parseTrueNumberOnly: false,
-        arrayMode: true, //"strict"
-        stopNodes: ["parse-me-as-string"]
-    };
-    let jsonObj = parser.parse(dom.outerHTML,options);
-    console.log("json",jsonObj)
+    this.xsd=(await axios.get('./data/xccdf_1.2.xsd.xml')).data
   },
   methods: {
     async importFile(e) {
@@ -94,6 +80,13 @@ export default {
       pom.classList.add('dragout');
       pom.click();
     },
+    show() {
+      let obj={
+        xml: this.sourceCode,
+        schema: this.xsd
+      }
+      console.log(xmllint.validateXML(obj))
+    }
   }
 }
 </script>

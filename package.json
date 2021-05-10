@@ -8,15 +8,19 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
     "fast-xml-parser": "^3.19.0",
+    "postinstall": "^0.7.0",
     "vue": "^2.6.11",
     "vue-async-computed": "^3.9.0",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
     "xml-js": "^1.6.11",
-    "xml2js": "^0.4.23"
+    "xml-loader": "^1.2.1",
+    "xml2js": "^0.4.23",
+    "xmllint": "^0.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
